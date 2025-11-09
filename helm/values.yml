@@ -44,6 +44,7 @@ resources:
 
 probes:
   startup:
+    type: httpGet
     enabled: true
     path: /startup
     port: 3000      
@@ -51,6 +52,7 @@ probes:
     failureThreshold: 30
 
   readiness:
+    type: httpGet
     enabled: true
     path: /readiness
     port: 3000
@@ -58,6 +60,7 @@ probes:
     failureThreshold: 3
 
   liveness:
+    type: httpGet
     enabled: true
     path: /health
     port: 3000
