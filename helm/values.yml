@@ -75,7 +75,7 @@ autoscaling:
 
 configMap:
   data: 
-    MONGODB_HOST: forcet-mongo.forcet22-dev.svc.cluster.local
+    MONGODB_HOST: forcet-poke-mongo.forcet22-dev.svc.cluster.local
     MONGO_PORT: 27017
     MONGODB_DBNAME: pokeBase
     APP_PORT: 3000
