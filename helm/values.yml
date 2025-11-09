@@ -92,7 +92,7 @@ networkPolicy:
   ingressFromApps:
     - forcet-poke-api
   egressTo: 
-    - app: forcet-poke-mongo
+    - app: forcet-mongo
       port: 27017
   allowInternetEgress: false
   defaultDeny:
