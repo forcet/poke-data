@@ -12,6 +12,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    outputs:
+      pkg-name: ${{ steps.pkg.outputs.name }}
+      pkg-version: ${{ steps.pkg.outputs.version }}
 
     steps:
       # 1. Clona tu repositorio en la máquina virtual
