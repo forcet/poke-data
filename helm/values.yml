@@ -1,0 +1,106 @@
+name: forcet-poke-data
+
+namespace: forcet22-dev
+
+labels:
+  app: forcet-poke-data
+
+workload:
+  type: Deployment 
+  replicas: 2
+  storageSize: 20Gi
+
+persistence:
+  enabled: false
+
+replicaCount: 2
+
+service:
+  enabled: true
+  type: ClusterIP    
+  port: 3000
+  targetPort: 3000
+  headless: true
+  protocol: TCP
+
+container:
+  port: 3000
+  failureThreshold: 5
+  initialDelaySeconds: 0
+  periodSeconds: 10
+
+image:
+  repository: {{ repository }}
+  tag: {{ tag }}
+  pullPolicy: IfNotPresent
+
+resources:
+  request:
+    cpu: "500m"
+    memory: "800Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1500Mi"
+
+probes:
+  startup:
+    enabled: true
+    path: /startup
+    port: 3000      
+    periodSeconds: 10
+    failureThreshold: 30
+
+  readiness:
+    enabled: true
+    path: /readiness
+    port: 3000
+    periodSeconds: 10
+    failureThreshold: 3
+
+  liveness:
+    enabled: true
+    path: /health
+    port: 3000
+    periodSeconds: 10
+    failureThreshold: 3
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+configMap:
+  data: 
+    MONGODB_HOST: forcet-mongo.forcet22-dev.svc.cluster.local
+    MONGO_PORT: 27017
+    MONGODB_DBNAME: pokeBase
+    APP_PORT: 3000
+
+secret:
+  enabled: true
+  data: 
+    MONGODB_USER: forcet
+    MONGODB_PASSWORD: pokepassword
+
+networkPolicy:
+  enabled: true
+  port: 3000 
+  ingressFromApps:
+    - forcet-poke-api
+  egressTo: 
+    - app: forcet-poke-mongo
+      port: 27017
+  allowInternetEgress: false
+  defaultDeny:
+    enabled: false
+
+route:
+  enabled: false
+  host: ""          
+  serviceName: ""   
+  targetPort: ""
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
